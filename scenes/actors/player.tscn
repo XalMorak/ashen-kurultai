@@ -1,0 +1,108 @@
+[gd_scene load_steps=19 format=3 uid="uid://bplayerashen001"]
+
+[ext_resource type="Script" path="res://src/actors/player/player_controller.gd" id="1_player"]
+[ext_resource type="Script" path="res://src/actors/player/orbit_camera.gd" id="2_cam"]
+[ext_resource type="Script" path="res://src/actors/player/lock_on_controller.gd" id="3_lock"]
+[ext_resource type="Script" path="res://src/core/state_machine.gd" id="4_sm"]
+[ext_resource type="Script" path="res://src/actors/player/states/idle.gd" id="5_idle"]
+[ext_resource type="Script" path="res://src/actors/player/states/move.gd" id="6_move"]
+[ext_resource type="Script" path="res://src/actors/player/states/sprint.gd" id="7_sprint"]
+[ext_resource type="Script" path="res://src/actors/player/states/dodge.gd" id="8_dodge"]
+[ext_resource type="Script" path="res://src/actors/player/states/guard.gd" id="9_guard"]
+[ext_resource type="Script" path="res://src/actors/player/states/attack.gd" id="10_atk"]
+[ext_resource type="Script" path="res://src/actors/player/states/hit.gd" id="11_hit"]
+[ext_resource type="Script" path="res://src/actors/player/states/death.gd" id="12_death"]
+[ext_resource type="Script" path="res://src/combat/hitbox.gd" id="13_hitbox"]
+[ext_resource type="Script" path="res://src/combat/hurtbox.gd" id="14_hurt"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+radius = 0.38
+height = 1.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.38
+height = 1.7
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hurt"]
+radius = 0.55
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hit"]
+size = Vector3(0.7, 0.5, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_weapon"]
+size = Vector3(0.08, 0.08, 1.5)
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_player")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+mesh = SubResource("CapsuleMesh_body")
+
+[node name="WeaponMesh" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0.1, -0.55)
+mesh = SubResource("BoxMesh_weapon")
+
+[node name="OrbitCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 5.2)
+current = true
+fov = 62.0
+script = ExtResource("2_cam")
+target = NodePath("..")
+
+[node name="LockOn" type="Node" parent="."]
+script = ExtResource("3_lock")
+camera = NodePath("../OrbitCamera")
+origin = NodePath("..")
+
+[node name="Hurtbox" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 8
+script = ExtResource("14_hurt")
+
+[node name="HurtShape" type="CollisionShape3D" parent="Hurtbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("SphereShape3D_hurt")
+
+[node name="Hitbox" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, -1.1)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("13_hitbox")
+
+[node name="HitShape" type="CollisionShape3D" parent="Hitbox"]
+shape = SubResource("BoxShape3D_hit")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("4_sm")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("5_idle")
+
+[node name="Move" type="Node" parent="StateMachine"]
+script = ExtResource("6_move")
+
+[node name="Sprint" type="Node" parent="StateMachine"]
+script = ExtResource("7_sprint")
+
+[node name="Dodge" type="Node" parent="StateMachine"]
+script = ExtResource("8_dodge")
+
+[node name="Guard" type="Node" parent="StateMachine"]
+script = ExtResource("9_guard")
+
+[node name="Attack" type="Node" parent="StateMachine"]
+script = ExtResource("10_atk")
+
+[node name="Hit" type="Node" parent="StateMachine"]
+script = ExtResource("11_hit")
+
+[node name="Death" type="Node" parent="StateMachine"]
+script = ExtResource("12_death")
