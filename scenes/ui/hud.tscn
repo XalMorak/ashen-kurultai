@@ -1,0 +1,98 @@
+[gd_scene load_steps=2 format=3 uid="uid://bhudashen001"]
+
+[ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Bars" type="VBoxContainer" parent="Root"]
+offset_left = 48.0
+offset_top = 40.0
+offset_right = 420.0
+offset_bottom = 110.0
+
+[node name="Health" type="ProgressBar" parent="Root/Bars"]
+custom_minimum_size = Vector2(360, 18)
+max_value = 1.0
+value = 1.0
+show_percentage = false
+
+[node name="Stamina" type="ProgressBar" parent="Root/Bars"]
+custom_minimum_size = Vector2(300, 12)
+max_value = 1.0
+value = 1.0
+show_percentage = false
+
+[node name="Ember" type="Label" parent="Root"]
+offset_left = 48.0
+offset_top = 118.0
+offset_right = 420.0
+offset_bottom = 142.0
+text = "EMBER  0"
+
+[node name="Flask" type="Label" parent="Root"]
+offset_left = 48.0
+offset_top = 142.0
+offset_right = 420.0
+offset_bottom = 166.0
+text = "FLASK  5 / 5"
+
+[node name="ClassTitle" type="Label" parent="Root"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -520.0
+offset_top = 40.0
+offset_right = -48.0
+offset_bottom = 72.0
+horizontal_alignment = 2
+
+[node name="Prompt" type="Label" parent="Root"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -90.0
+offset_right = 280.0
+offset_bottom = -50.0
+horizontal_alignment = 1
+
+[node name="Banner" type="Label" parent="Root"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 160.0
+offset_right = 400.0
+offset_bottom = 220.0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 28
+
+[node name="Boss" type="VBoxContainer" parent="Root"]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -360.0
+offset_top = 48.0
+offset_right = 360.0
+offset_bottom = 110.0
+
+[node name="Name" type="Label" parent="Root/Boss"]
+horizontal_alignment = 1
+text = "Boss"
+
+[node name="Health" type="ProgressBar" parent="Root/Boss"]
+custom_minimum_size = Vector2(720, 16)
+max_value = 1.0
+value = 1.0
+show_percentage = false
